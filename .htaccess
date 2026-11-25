@@ -1,0 +1,252 @@
+# =====================================================================
+#  centerondigital.com  (Astro statik site, Apache)
+#  OTOMATİK ÜRETİLİR: src/integrations/htaccess.mjs her build'de yazar.
+#  Elle değiştirmeyin; yönlendirmeler astro.config.mjs REDIRECTS'te.
+#  Tüm bloklar <IfModule> içinde: ilgili modül sunucuda yoksa
+#  kural sessizce atlanır, site 500 hatası vermez.
+# =====================================================================
+
+# --- Temel ayarlar ----------------------------------------------------
+DirectoryIndex index.html
+AddDefaultCharset UTF-8
+AddCharset UTF-8 .html .txt .xml .webmanifest
+
+# Klasör içeriğinin listelenmesini kapat (_astro, images vb.)
+# Not: Site bu satır yüzünden "500 Internal Server Error" verirse
+# hosting bu ayara izin vermiyor demektir; satırı silin.
+Options -Indexes
+
+# --- Hata sayfası -----------------------------------------------------
+# Olmayan adres: sitenin kendi 404 sayfası, gerçek 404 koduyla. PHP yok.
+ErrorDocument 404 /404.html
+<If "%{REQUEST_URI} =~ m#^/en/#">
+    ErrorDocument 404 /en/404/index.html
+</If>
+
+# --- Yönlendirmeler ---------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # --- cPanel 404.shtml -------------------------------------------
+    # Hosting kendi ErrorDocument'ını dayatırsa /404.shtml gelir (404.html'in
+    # kopyası). Aşağıdaki dil klasörlerinde o dilin 404 sayfası gösterilir.
+    RewriteCond %{ENV:REDIRECT_URL} ^/en/
+    RewriteRule ^404\.shtml$ /en/404/index.html [L]
+
+    # --- Eski adresler -> yeni adresler (301) -------------------------
+    # Türkçe harfler UTF-8 bayt kodu olarak yazılır (\xC5\x9F = ş,
+    # \xC4\xB1 = ı ...). Astro'nun bu adresler için ürettiği sayfalar
+    # 301 değil 200 + meta refresh döner (Türkçe adlı klasörleri de
+    # sunucudaki zip açıcı bozuyor); gerçek 301'i bu kurallar verir.
+
+    # /ekibimiz
+    RewriteRule ^ekibimiz/?$ https://centerondigital.com/hakkimizda/#ekibimiz [R=301,NE,L]
+
+    # /vizyon-misyon-degerler
+    RewriteRule ^vizyon-misyon-degerler/?$ https://centerondigital.com/hakkimizda/#vizyon-misyon-degerler [R=301,NE,L]
+
+    # /arge
+    RewriteRule ^arge/?$ https://centerondigital.com/hakkimizda/#arge [R=301,NE,L]
+
+    # /en/team
+    RewriteRule ^en/team/?$ https://centerondigital.com/en/about/#team [R=301,NE,L]
+
+    # /en/vision-mission-values
+    RewriteRule ^en/vision-mission-values/?$ https://centerondigital.com/en/about/#vision-mission-values [R=301,NE,L]
+
+    # /en/rd
+    RewriteRule ^en/rd/?$ https://centerondigital.com/en/about/#rd [R=301,NE,L]
+
+    # /sizma-testi
+    RewriteRule ^sizma-testi/?$ https://centerondigital.com/hizmetler/test/#sizma-testi [R=301,NE,L]
+
+    # /bddk-uyumlu-sizma-testi
+    RewriteRule ^bddk-uyumlu-sizma-testi/?$ https://centerondigital.com/hizmetler/test/#bddk-uyumlu-sizma-testi [R=301,NE,L]
+
+    # /ddos-dos-testleri
+    RewriteRule ^ddos-dos-testleri/?$ https://centerondigital.com/hizmetler/test/#ddos-dos-testleri [R=301,NE,L]
+
+    # /red-team
+    RewriteRule ^red-team/?$ https://centerondigital.com/hizmetler/test/#red-team [R=301,NE,L]
+
+    # /sosyal-muhendislik
+    RewriteRule ^sosyal-muhendislik/?$ https://centerondigital.com/hizmetler/test/#sosyal-muhendislik [R=301,NE,L]
+
+    # /iso27001-danismanligi
+    RewriteRule ^iso27001-danismanligi/?$ https://centerondigital.com/hizmetler/danismanlik/#iso27001-danismanligi [R=301,NE,L]
+
+    # /kvkk-danismanligi
+    RewriteRule ^kvkk-danismanligi/?$ https://centerondigital.com/hizmetler/danismanlik/#kvkk-danismanligi [R=301,NE,L]
+
+    # /bilgi-ve-iletisim-guvenligi-rehberi
+    RewriteRule ^bilgi-ve-iletisim-guvenligi-rehberi/?$ https://centerondigital.com/hizmetler/danismanlik/#bilgi-ve-iletisim-guvenligi-rehberi [R=301,NE,L]
+
+    # /bilgi-guvenligi-olgunluk-ve-siber-risk-degerlendirmesi
+    RewriteRule ^bilgi-guvenligi-olgunluk-ve-siber-risk-degerlendirmesi/?$ https://centerondigital.com/hizmetler/degerlendirme/#bilgi-guvenligi-olgunluk-ve-siber-risk-degerlendirmesi [R=301,NE,L]
+
+    # /bilgi-varliklari-envanteri-yonetimi
+    RewriteRule ^bilgi-varliklari-envanteri-yonetimi/?$ https://centerondigital.com/hizmetler/degerlendirme/#bilgi-varliklari-envanteri-yonetimi [R=301,NE,L]
+
+    # /bt-saglik-kontrolu
+    RewriteRule ^bt-saglik-kontrolu/?$ https://centerondigital.com/hizmetler/degerlendirme/#bt-saglik-kontrolu [R=301,NE,L]
+
+    # /en/penetration-testing
+    RewriteRule ^en/penetration-testing/?$ https://centerondigital.com/en/services/testing/#penetration-testing [R=301,NE,L]
+
+    # /en/bddk-compliant-pentest
+    RewriteRule ^en/bddk-compliant-pentest/?$ https://centerondigital.com/en/services/testing/#bddk-compliant-pentest [R=301,NE,L]
+
+    # /en/ddos-dos-testing
+    RewriteRule ^en/ddos-dos-testing/?$ https://centerondigital.com/en/services/testing/#ddos-dos-testing [R=301,NE,L]
+
+    # /en/red-team
+    RewriteRule ^en/red-team/?$ https://centerondigital.com/en/services/testing/#red-team [R=301,NE,L]
+
+    # /en/social-engineering
+    RewriteRule ^en/social-engineering/?$ https://centerondigital.com/en/services/testing/#social-engineering [R=301,NE,L]
+
+    # /en/iso27001-consulting
+    RewriteRule ^en/iso27001-consulting/?$ https://centerondigital.com/en/services/consulting/#iso27001-consulting [R=301,NE,L]
+
+    # /en/kvkk-consulting
+    RewriteRule ^en/kvkk-consulting/?$ https://centerondigital.com/en/services/consulting/#kvkk-consulting [R=301,NE,L]
+
+    # /en/big-guide-consulting
+    RewriteRule ^en/big-guide-consulting/?$ https://centerondigital.com/en/services/consulting/#big-guide-consulting [R=301,NE,L]
+
+    # /en/security-maturity-assessment
+    RewriteRule ^en/security-maturity-assessment/?$ https://centerondigital.com/en/services/assessment/#security-maturity-assessment [R=301,NE,L]
+
+    # /en/information-asset-management
+    RewriteRule ^en/information-asset-management/?$ https://centerondigital.com/en/services/assessment/#information-asset-management [R=301,NE,L]
+
+    # /en/it-health-check
+    RewriteRule ^en/it-health-check/?$ https://centerondigital.com/en/services/assessment/#it-health-check [R=301,NE,L]
+
+    # /revbits-cyber-intelligence-platform
+    RewriteRule ^revbits-cyber-intelligence-platform/?$ https://centerondigital.com/revbits/#cip [R=301,NE,L]
+
+    # /deception-technology
+    RewriteRule ^deception-technology/?$ https://centerondigital.com/revbits/#deception [R=301,NE,L]
+
+    # /e-mail-technology
+    RewriteRule ^e-mail-technology/?$ https://centerondigital.com/revbits/#email [R=301,NE,L]
+
+    # /endpoint-security
+    RewriteRule ^endpoint-security/?$ https://centerondigital.com/revbits/#endpoint [R=301,NE,L]
+
+    # /privilaged-access-management
+    RewriteRule ^privilaged-access-management/?$ https://centerondigital.com/revbits/#pam [R=301,NE,L]
+
+    # /zero-trust-network
+    RewriteRule ^zero-trust-network/?$ https://centerondigital.com/revbits/#ztn [R=301,NE,L]
+
+    # /yapay-zeka-destekli-guvenlik-asistani
+    RewriteRule ^yapay-zeka-destekli-guvenlik-asistani/?$ https://centerondigital.com/surfacemon/#ai [R=301,NE,L]
+
+    # /surfacemon-form
+    RewriteRule ^surfacemon-form/?$ https://centerondigital.com/surfacemon/#start [R=301,NE,L]
+
+    # http -> https
+    # Cloudflare arkasında döngüye girmemesi için ziyaretçinin gerçek
+    # protokolünü X-Forwarded-Proto başlığından okur.
+    RewriteCond %{HTTP:X-Forwarded-Proto} =http
+    RewriteRule ^ https://centerondigital.com%{REQUEST_URI} [R=301,L]
+
+    # www.centerondigital.com -> centerondigital.com
+    RewriteCond %{HTTP_HOST} ^www\.centerondigital\.com$ [NC]
+    RewriteRule ^ https://centerondigital.com%{REQUEST_URI} [R=301,L]
+
+    # Sonunda / olmayan klasör adresi -> tek adımda https + / (Apache'nin
+    # kendi yönlendirmesi Cloudflare arkasında önce http'ye gidiyor)
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^(.*[^/])$ https://centerondigital.com/$1/ [R=301,L]
+
+    # --- 404 yedeği (normalde KAPALI) ---------------------------------
+    # Normalde yukarıdaki ErrorDocument yeterli (gerçek 404 kodu). Hosting
+    # onu ezerse (canlıda olmayan bir adreste hosting'in kendi sayfası
+    # çıkarsa) bir sonraki satırın başındaki # işaretini kaldırın: olmayan
+    # adresler 404 sayfasına içeriden aktarılır. Durum kodu o zaman 200
+    # olur; 404 sayfaları noindex taşıdığı için Google onları dizine almaz.
+    # (Kalıcı yapmak için: astro.config.mjs'te htaccess({ fallback404: true }).)
+    # RewriteRule ^ - [E=FALLBACK404:1]
+
+    RewriteCond %{ENV:FALLBACK404} =1
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d [OR]
+    RewriteCond %{REQUEST_FILENAME}/index.html !-f
+    RewriteRule ^ - [E=NOTFOUND:1]
+
+    RewriteCond %{ENV:NOTFOUND} =1
+    RewriteCond %{REQUEST_URI} ^/en/
+    RewriteRule ^ /en/404/index.html [L]
+
+    RewriteCond %{ENV:NOTFOUND} =1
+    RewriteRule ^ /404.html [L]
+
+    # index.html'i olmayan klasörler (_astro/, images/ ...): çıplak
+    # "403 Forbidden" yerine 404 (yukarıdaki ErrorDocument sayfası)
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteCond %{REQUEST_FILENAME}/index.html !-f
+    RewriteRule ^ - [R=404,L]
+</IfModule>
+
+# --- MIME türleri -----------------------------------------------------
+<IfModule mod_mime.c>
+    AddType application/manifest+json  .webmanifest
+    AddType font/woff2                 .woff2
+    AddType image/webp                 .webp
+    AddType image/svg+xml              .svg
+    AddType video/mp4                  .mp4
+    AddType text/plain                 .txt
+</IfModule>
+
+# --- Sıkıştırma -------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+    AddOutputFilterByType DEFLATE application/javascript text/javascript
+    AddOutputFilterByType DEFLATE application/xml application/json
+    AddOutputFilterByType DEFLATE application/manifest+json image/svg+xml
+</IfModule>
+
+# --- Tarayıcı önbelleği -----------------------------------------------
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault                          "access plus 1 week"
+
+    # HTML ve site haritaları: her zaman güncel sürüm kontrol edilsin
+    ExpiresByType text/html                 "access plus 0 seconds"
+    ExpiresByType application/xml           "access plus 0 seconds"
+    ExpiresByType text/xml                  "access plus 0 seconds"
+    ExpiresByType text/plain                "access plus 1 hour"
+    ExpiresByType application/manifest+json "access plus 1 week"
+
+    # JS/CSS sadece _astro/ içinde ve dosya adları hash'li -> uzun süre
+    ExpiresByType application/javascript    "access plus 1 year"
+    ExpiresByType text/javascript           "access plus 1 year"
+    ExpiresByType text/css                  "access plus 1 year"
+
+    # Görsel, video, font
+    ExpiresByType image/webp                "access plus 1 month"
+    ExpiresByType image/jpeg                "access plus 1 month"
+    ExpiresByType image/png                 "access plus 1 month"
+    ExpiresByType image/svg+xml             "access plus 1 month"
+    ExpiresByType image/x-icon              "access plus 1 month"
+    ExpiresByType image/vnd.microsoft.icon  "access plus 1 month"
+    ExpiresByType video/mp4                 "access plus 1 month"
+    ExpiresByType font/woff2                "access plus 1 year"
+</IfModule>
+
+# --- Güvenlik başlıkları ----------------------------------------------
+<IfModule mod_headers.c>
+    # deploy/nginx-security-headers.conf ile aynı başlıklar.
+    Header always set Content-Security-Policy "frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'; require-trusted-types-for 'script'"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+    # HSTS 1. aşama (5 dk). HTTPS bir hafta sorunsuz çalışınca 31536000 yapın.
+    Header always set Strict-Transport-Security "max-age=300"
+    Header unset X-Powered-By
+</IfModule>
